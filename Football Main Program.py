@@ -83,11 +83,13 @@ attackers_df = master_football_df[(master_football_df['Simple Position'] == 'A')
 
 # Create a new dataframe to hold my squad lists for the top 50 teams based on current FIFA World Rankings
 squad_list_df = pd.DataFrame()
+ave_rating_df = pd.DataFrame([['Nation', 'Simple Position', 'Scout Rating', 'Ave Rating']])
 
 # Loop through our position based dataframes and for each team in the FIFA top 50, produce a squad based on
-for team in range(51):
+for team in range(3):
     temp_goalkeepers_df = goalkeepers_df[(goalkeepers_df['rank'] == team)]
-    squad_list_df = squad_list_df.append(temp_goalkeepers_df.head(3))
+    temp_goalkeepers_df = temp_goalkeepers_df.head(3)
+    squad_list_df = squad_list_df.append(temp_goalkeepers_df)
     temp_defenders_df = defenders_df[(defenders_df['rank'] == team)]
     squad_list_df = squad_list_df.append(temp_defenders_df.head(8))
     temp_midfielders_df = midfielders_df[(midfielders_df['rank'] == team)]
@@ -95,9 +97,8 @@ for team in range(51):
     temp_attackers_df = attackers_df[(attackers_df['rank'] == team)]
     squad_list_df = squad_list_df.append(temp_attackers_df.head(5))
 
-ave_rating_df = temp_defenders_df.head(3)
-ave_rating_df = ave_rating_df[['Nation', 'Simple Position', 'Scout Rating']]
-ave_rating_df['ave rating'] = ave_rating_df.groupby(['Nation', 'Simple Position'])['Scout Rating'].transform("mean")
+# Create a dataframe with the average rating for each squad for each position
+ave_rating_df = squad_list_df.groupby(['Nation', 'Simple Position'], as_index=False)['Scout Rating'].mean()
 
 # Get a list of all nations and a list of all positions
 best_pos_values = master_football_df['Best Position'].unique()
