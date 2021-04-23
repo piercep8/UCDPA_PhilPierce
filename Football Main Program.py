@@ -104,16 +104,40 @@ for team in range(11):
 squad_list_df = squad_list_df.sort_values(['rank', 'country_abrv', 'position order', 'Scout Rating'],
                                           ascending=[True, True, True, False])
 
-# Datasets for graph plotting
-# Create a table with the average rating for each squad for each position
+#
+# *** Datasets for Graph Plotting ***
+#
+
+# Average Rating for Each Squad for Each Position
 ave_rating_df = squad_list_df.groupby(['rank', 'country_abrv', 'position order', 'Simple Position'],
                                       as_index=False)['Scout Rating'].mean()
+
+# Best Player Rating vs Average Player Rating
+temp_max_rating_df = squad_list_df.groupby(['rank', 'country_abrv'], as_index=False)['Scout Rating'].max()
+temp_max_rating_df = temp_max_rating_df.rename(columns={'rank': 'rank', 'country_abrv': 'country',
+                                                        'Scout Rating': 'max player rating'})
+temp_ave_rating_df = squad_list_df.groupby(['rank', 'country_abrv'], as_index=False)['Scout Rating'].mean()
+temp_ave_rating_df = temp_ave_rating_df.rename(columns={'rank': 'rank', 'country_abrv': 'country',
+                                                        'Scout Rating': 'ave player rating'})
+ave_vs_max_rating_df = temp_ave_rating_df.merge(temp_max_rating_df, how='left')
+
 
 # Build Graphs
 country_col = {1: 'red', 2: 'orangered', 3: 'orange', 4: 'gold', 5: 'yellow', 6: 'greenyellow', 7: 'forestgreen',
                8: 'teal', 9: 'royalblue', 10: 'midnightblue'}
 
 #import matplotlib.pyplot as plt
+
+
+
+
+# Get a list of all nations and a list of all positions
+best_pos_values = master_football_df['Best Position'].unique()
+nation = master_football_df['Nation'].unique()
+#print(master_football_df.info())
+
+#print(squad_list_df[['Name', 'Nation', 'Simple Position', 'Scout Rating']])
+# print(type(best_pos_values))
 
 
 
