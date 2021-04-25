@@ -132,16 +132,17 @@ graph_ave_rating_df['country_pos'] = graph_ave_rating_df['country_abrv'].map(str
 #graph_colour_df['country_pos'] = graph_ave_rating_df['country_pos']
 #graph_colour_df['colour'] = graph_ave_rating_df['rank'].map(country_col_dict)
 #graph_ave_rating_df['colour'] = graph_ave_rating_df['rank'].map(country_col_dict)
-#graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'country_pos', 'Scout Rating']]
-graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'Simple Position', 'Scout Rating']]
+graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'country_pos', 'Scout Rating']]
+#graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'Simple Position', 'Scout Rating']]
 
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-sns.histplot(data=graph_ave_rating_df, x='Simple Position', y='Scout Rating', bins=40, hue='country_abrv', fill=False)
+sns.barplot(data=graph_ave_rating_df, x='country_pos', y='Scout Rating', hue='country_abrv')
+plt.ylim(40, 90)
 plt.xlabel('Country and Average Player Rating per Position')
 plt.ylabel('Rating')
-plt.title('Top 10 FIFA Ranked Countries and the Average Rating for a Squad of 23 per Position')
+plt.title('Top 5 FIFA Ranked Countries and the Average Rating for a Squad of 23 per Position')
 
 
 plt.show()
