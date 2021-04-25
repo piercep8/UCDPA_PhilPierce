@@ -90,7 +90,7 @@ squad_list_df = pd.DataFrame()
 ave_rating_df = pd.DataFrame([['rank', 'country_abrv','position order', 'Simple Position', 'Scout Rating', 'Ave Rating']])
 
 # Loop through our position based dataframes and for each team in the FIFA top 50, produce a squad based on
-for team in range(11):
+for team in range(6):
     temp_goalkeepers_df = goalkeepers_df[(goalkeepers_df['rank'] == team)]
     temp_goalkeepers_df = temp_goalkeepers_df.head(3)
     squad_list_df = squad_list_df.append(temp_goalkeepers_df)
@@ -123,23 +123,28 @@ ave_vs_max_rating_df = temp_ave_rating_df.merge(temp_max_rating_df, how='left')
 
 
 # Build Graphs
-country_col = {1: 'red', 2: 'orangered', 3: 'orange', 4: 'gold', 5: 'yellow', 6: 'greenyellow', 7: 'forestgreen',
+country_col_dict = {1: 'red', 2: 'orangered', 3: 'orange', 4: 'gold', 5: 'yellow', 6: 'greenyellow', 7: 'forestgreen',
                8: 'teal', 9: 'royalblue', 10: 'midnightblue'}
 
-#import matplotlib.pyplot as plt
+graph_ave_rating_df = ave_rating_df[['rank', 'country_abrv', 'Simple Position', 'Scout Rating']]
+graph_ave_rating_df['country_pos'] = graph_ave_rating_df['country_abrv'].map(str)+' ' + graph_ave_rating_df['Simple Position']
+#graph_colour_df = pd.DataFrame()
+#graph_colour_df['country_pos'] = graph_ave_rating_df['country_pos']
+#graph_colour_df['colour'] = graph_ave_rating_df['rank'].map(country_col_dict)
+#graph_ave_rating_df['colour'] = graph_ave_rating_df['rank'].map(country_col_dict)
+#graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'country_pos', 'Scout Rating']]
+graph_ave_rating_df = graph_ave_rating_df[['country_abrv', 'Simple Position', 'Scout Rating']]
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.histplot(data=graph_ave_rating_df, x='Simple Position', y='Scout Rating', bins=40, hue='country_abrv', fill=False)
+plt.xlabel('Country and Average Player Rating per Position')
+plt.ylabel('Rating')
+plt.title('Top 10 FIFA Ranked Countries and the Average Rating for a Squad of 23 per Position')
 
 
-
-
-# Get a list of all nations and a list of all positions
-best_pos_values = master_football_df['Best Position'].unique()
-nation = master_football_df['Nation'].unique()
-#print(master_football_df.info())
-
-#print(squad_list_df[['Name', 'Nation', 'Simple Position', 'Scout Rating']])
-# print(type(best_pos_values))
-
-
+plt.show()
 
 
 # Get a list of all nations and a list of all positions
