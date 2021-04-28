@@ -90,7 +90,7 @@ squad_list_df = pd.DataFrame()
 ave_rating_df = pd.DataFrame([['rank', 'country_abrv','position order', 'Simple Position', 'Scout Rating', 'Ave Rating']])
 
 # Loop through our position based dataframes and for each team in the FIFA top 50, produce a squad based on
-for team in range(11):
+for team in range(51):
     temp_goalkeepers_df = goalkeepers_df[(goalkeepers_df['rank'] == team)]
     temp_goalkeepers_df = temp_goalkeepers_df.head(3)
     squad_list_df = squad_list_df.append(temp_goalkeepers_df)
@@ -103,16 +103,26 @@ for team in range(11):
 
 squad_list_df = squad_list_df.sort_values(['rank', 'country_abrv', 'position order', 'Scout Rating'],
                                           ascending=[True, True, True, False])
-
 #
 # *** Datasets for Graph Plotting ***
 #
+# The Brian Clough 4 skills
+# 4 Data Frames that show the key things Brian Clough said a great team needed.
+defenders_who_can_head_df = squad_list_df[(squad_list_df['Simple Position'] == 'DEF')]
+defenders_who_can_head_df = defenders_who_can_head_df.groupby(['rank', 'country_abrv', 'Simple Position'],
+                                                              as_index=False)['Heading'].mean()
+defenders_who_can_tackle_df = squad_list_df[(squad_list_df['Simple Position'] == 'DEF')]
+defenders_who_can_tackle_df = defenders_who_can_tackle_df.groupby(['rank', 'country_abrv', 'Simple Position'],
+                                                                  as_index=False)['Tackling'].mean()
+midfielders_who_can_pass_df = squad_list_df[(squad_list_df['Simple Position'] == 'MID')]
+midfielders_who_can_pass_df = midfielders_who_can_pass_df.groupby(['rank', 'country_abrv', 'Simple Position'],
+                                                                  as_index=False)['Passing'].mean()
+forwards_who_can_score_df = squad_list_df[(squad_list_df['Simple Position'] == 'FWD')]
+forwards_who_can_score_df = forwards_who_can_score_df.groupby(['rank', 'country_abrv', 'Simple Position'],
+                                                              as_index=False)['Finishing'].mean()
 
-# Average Rating for Each Squad for Each Position
-ave_rating_df = squad_list_df.groupby(['rank', 'country_abrv', 'position order', 'Simple Position'],
-                                      as_index=False)['Scout Rating'].mean()
 
-# Best Player Rating vs Average Player Rating
+#               *** Best Player Rating vs Average Player Rating ***
 temp_max_rating_df = squad_list_df.groupby(['rank', 'country_abrv'], as_index=False)['Scout Rating'].max()
 temp_max_rating_df = temp_max_rating_df.rename(columns={'rank': 'rank', 'country_abrv': 'country',
                                                         'Scout Rating': 'max player rating'})
@@ -121,18 +131,29 @@ temp_ave_rating_df = temp_ave_rating_df.rename(columns={'rank': 'rank', 'country
                                                         'Scout Rating': 'ave player rating'})
 ave_vs_max_rating_df = temp_ave_rating_df.merge(temp_max_rating_df, how='left')
 
+#              *** Overall Strength in Each Position ***
+# Create files that show the mean value for each position (GK, DEF, MID and FWD) for selected squads based on
+# FIFA world ranking
+# Average Rating for Each Squad for Each Position
+ave_rating_df = squad_list_df.groupby(['rank', 'country_abrv', 'position order', 'Simple Position'],
+                                      as_index=False)['Scout Rating'].mean()
 
-# Create files for the Average Position Rating for countries ranked 1 to 5 and 6 to 10
 graph_ave_rating_df = ave_rating_df[['rank', 'country_abrv', 'Simple Position', 'Scout Rating']]
+# Merge Country and Position together to give "BEL GK" or "ENG MID"
 graph_ave_rating_df['country_pos'] = graph_ave_rating_df['country_abrv'].map(str)+' ' + \
                                      graph_ave_rating_df['Simple Position']
-ave_rating_1_to_5_df = graph_ave_rating_df[graph_ave_rating_df["rank"] < 6]
-ave_rating_6_to_10_df = graph_ave_rating_df[graph_ave_rating_df["rank"] > 5]
+# Create files to display on graphs based on ranking
+ave_rating_1_to_5_df = graph_ave_rating_df[(graph_ave_rating_df["rank"] <= 5)]
+ave_rating_6_to_10_df = graph_ave_rating_df[graph_ave_rating_df["rank"].between(6, 10)]
+ave_rating_40_to_45_df = graph_ave_rating_df[graph_ave_rating_df["rank"].between(40, 45)]
+ave_rating_46_to_50_df = graph_ave_rating_df[graph_ave_rating_df["rank"].between(46, 50)]
+
 
 # Create csv files for our graph data
 ave_rating_1_to_5_df.to_csv('ave_rating_1_to_5.csv', header=True, encoding='ISO-8859-1', index=False)
 ave_rating_6_to_10_df.to_csv('ave_rating_1_to_5.csv', header=True, encoding='ISO-8859-1', index=False)
 ave_vs_max_rating_df.to_csv('ave_vs_max_rating.csv', header=True, encoding='ISO-8859-1', index=False)
+squad_list_df.to_csv('squad_list.csv', header=True, encoding='ISO-8859-1', index=False)
 
 
 # Build Graphs
@@ -168,3 +189,4 @@ ave_vs_max_rating_df.to_csv('ave_vs_max_rating.csv', header=True, encoding='ISO-
 
 #print(squad_list_df[['Name', 'Nation', 'Simple Position', 'Scout Rating']])
 # print(type(best_pos_values))
+
