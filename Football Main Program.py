@@ -154,6 +154,10 @@ ave_rating_1_to_5_df.to_csv('ave_rating_1_to_5.csv', header=True, encoding='ISO-
 ave_rating_6_to_10_df.to_csv('ave_rating_1_to_5.csv', header=True, encoding='ISO-8859-1', index=False)
 ave_vs_max_rating_df.to_csv('ave_vs_max_rating.csv', header=True, encoding='ISO-8859-1', index=False)
 squad_list_df.to_csv('squad_list.csv', header=True, encoding='ISO-8859-1', index=False)
+defenders_who_can_head_df.to_csv('defenders_who_can_head_df.csv', header=True, encoding='ISO-8859-1', index=False)
+defenders_who_can_tackle_df.to_csv('defenders_who_can_tackle_df.csv', header=True, encoding='ISO-8859-1', index=False)
+midfielders_who_can_pass_df.to_csv('midfielders_who_can_pass_df.csv', header=True, encoding='ISO-8859-1', index=False)
+forwards_who_can_score_df.to_csv('forwards_who_can_score_df.csv', header=True, encoding='ISO-8859-1', index=False)
 
 
 # Build Graphs
